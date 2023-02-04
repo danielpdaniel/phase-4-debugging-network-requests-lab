@@ -63,11 +63,17 @@ developing your own process.
 - Add a new toy when the toy form is submitted
 
   - How I debugged:
+    -tried adding a new toy, checked Network tab of the browser tools and saw there was a 500 error "uninitialized constant ToysController::Toys"
+    -adding a byebug to the create method in the toys_controller, i could see that the params were being sent and the private method toy_params was being sent through, but we were still getting a name error for "Toys", I then realized Toys was plural and since we're talking about the model and not the table, it should be "Toy" singular!
 
 - Update the number of likes for a toy
 
   - How I debugged:
+    -ok this one is giving a status code of 204:No Content. The payload tab of the Network tab makes it look like it knows what we're updating and is sending the right number of likes to update. I'm thinking we just forgot to render the proper json in the patch route handler in the toys_controller file
+    -looks like that was the problem! I added the render json: toy to the update method in toys_controller and it seems to be working now!
 
 - Donate a toy to Goodwill (and delete it from our database)
 
   - How I debugged:
+    -this time we got 404 not found error, checking the network panel it says "ActionController::RoutingError: No route matches [DELETE]" making me think we gotta check our routes file in the config folder to make sure we're including the delete path in the routes
+    -added :delete to the routes that were included in the routes file's resources, still wasn't working, and wasnt triggering the byebug, checked "rails routes" in the terminal saw that it wasnt showing up then realized id put :delete as the method name instead of :destroy! 
